@@ -6,7 +6,7 @@ project (XercesLib)
 #====================================================
 
 IF(NOT CMAKE_BUILD_TYPE)
-    SET(CMAKE_BUILD_TYPE Release)
+  SET(CMAKE_BUILD_TYPE Release)
 ENDIF()
 
 if(NOT DEFINED CONF)
@@ -19,12 +19,14 @@ else()
   set(PLATFORM "x64")
 endif()
 
+if(DEFINED XERCESC_ROOT)
+  set(PROJECT_ROOT ${XERCESC_ROOT})
+endif()
 if(NOT PROJECT_ROOT)
-  set(PROJECT_ROOT "../")
+  set(PROJECT_ROOT "..")
 else()
   string(REPLACE "\\" "/" PROJECT_ROOT ${PROJECT_ROOT})
 endif()
-
 if(NOT DEFINED LINK_TYPE)
   set(LINK_TYPE "STATIC")
 endif() 
@@ -32,10 +34,8 @@ endif()
 # xerces_lib
 #====================================================
 
-
-set(XERCESC ${PROJECT_ROOT}src/xercesc)
-
-file(COPY ${XERCESC}/util/Xerces_autoconf_config.msvc.hpp DESTINATION ${XERCESC}/)
+set(XERCESC ${PROJECT_ROOT}/src/xercesc)
+file(COPY ${XERCESC}/util/Xerces_autoconf_config.msvc.hpp DESTINATION ${XERCESC})
 file(RENAME ${XERCESC}/Xerces_autoconf_config.msvc.hpp ${XERCESC}/util/Xerces_autoconf_config.hpp)
 
 set(SRC_XERCESC
@@ -768,6 +768,7 @@ set(SRC_XERCESC
   ${XERCESC}/util/MsgLoaders/Win32/Version.rc
 )
 
+include_directories(${PROJECT_ROOT}/src)
 #====================================================
 # common flags
 #====================================================
