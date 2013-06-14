@@ -2,43 +2,10 @@ cmake_minimum_required (VERSION 2.8.9)
 project (XercesLib)
 
 #====================================================
-# init variables
-#====================================================
-
-IF(NOT CMAKE_BUILD_TYPE)
-  SET(CMAKE_BUILD_TYPE Release)
-ENDIF()
-
-if(NOT DEFINED CONF)
-  set(CONF "x86")
-endif()
-        
-if(CONF STREQUAL "x86")
-  set(PLATFORM "Win32")
-else()
-  set(PLATFORM "x64")
-endif()
-
-if(DEFINED XERCESC_ROOT)
-  set(PROJECT_ROOT ${XERCESC_ROOT})
-endif()
-if(NOT PROJECT_ROOT)
-  set(PROJECT_ROOT "..")
-else()
-  string(REPLACE "\\" "/" PROJECT_ROOT ${PROJECT_ROOT})
-endif()
-if(NOT DEFINED LINK_TYPE)
-  set(LINK_TYPE "STATIC")
-endif() 
-#====================================================
 # xerces_lib
 #====================================================
 
-set(XERCESC ${PROJECT_ROOT}/src/xercesc)
-file(COPY ${XERCESC}/util/Xerces_autoconf_config.msvc.hpp DESTINATION ${XERCESC})
-file(RENAME ${XERCESC}/Xerces_autoconf_config.msvc.hpp ${XERCESC}/util/Xerces_autoconf_config.hpp)
-
-set(SRC_XERCESC
+set(COMMON_SRC_XERCESC
   ${XERCESC}/util/ArrayIndexOutOfBoundsException.hpp
   ${XERCESC}/util/Base64.hpp
   ${XERCESC}/util/BaseRefVectorOf.hpp
@@ -130,12 +97,7 @@ set(SRC_XERCESC
   ${XERCESC}/util/XMLUTF16Transcoder.hpp
   ${XERCESC}/util/XMLUTF8Transcoder.hpp
   ${XERCESC}/util/XMLWin1252Transcoder.hpp
-  ${XERCESC}/util/MsgLoaders/Win32/Win32MsgLoader.hpp
-  ${XERCESC}/util/Transcoders/ICU/ICUTransService.hpp
-  ${XERCESC}/util/Transcoders/Win32/Win32TransService.hpp
   ${XERCESC}/util/NetAccessors/BinHTTPInputStreamCommon.hpp
-  ${XERCESC}/util/NetAccessors/WinSock/BinHTTPURLInputStream.hpp
-  ${XERCESC}/util/NetAccessors/WinSock/WinSockNetAccessor.hpp
   ${XERCESC}/util/regx/ASCIIRangeFactory.hpp
   ${XERCESC}/util/regx/BlockRangeFactory.hpp
   ${XERCESC}/util/regx/BMPattern.hpp
@@ -163,8 +125,6 @@ set(SRC_XERCESC
   ${XERCESC}/util/regx/UnionToken.hpp
   ${XERCESC}/util/regx/XMLRangeFactory.hpp
   ${XERCESC}/util/regx/XMLUniCharacter.hpp
-  ${XERCESC}/util/FileManagers/WindowsFileMgr.hpp
-  ${XERCESC}/util/MutexManagers/WindowsMutexMgr.hpp
   ${XERCESC}/framework/LocalFileFormatTarget.hpp
   ${XERCESC}/framework/LocalFileInputSource.Hpp
   ${XERCESC}/framework/MemBufFormatTarget.hpp
@@ -512,11 +472,7 @@ set(SRC_XERCESC
   ${XERCESC}/util/XMLUTF16Transcoder.cpp
   ${XERCESC}/util/XMLUTF8Transcoder.cpp
   ${XERCESC}/util/XMLWin1252Transcoder.cpp
-  ${XERCESC}/util/Transcoders/Win32/Win32TransService.cpp
-  ${XERCESC}/util/MsgLoaders/InMemory/InMemMsgLoader.cpp
   ${XERCESC}/util/NetAccessors/BinHTTPInputStreamCommon.cpp
-  ${XERCESC}/util/NetAccessors/WinSock/BinHTTPURLInputStream.cpp
-  ${XERCESC}/util/NetAccessors/WinSock/WinSockNetAccessor.cpp
   ${XERCESC}/util/regx/ASCIIRangeFactory.cpp
   ${XERCESC}/util/regx/BlockRangeFactory.cpp
   ${XERCESC}/util/regx/BMPattern.cpp
@@ -541,8 +497,6 @@ set(SRC_XERCESC
   ${XERCESC}/util/regx/UnionToken.cpp
   ${XERCESC}/util/regx/XMLRangeFactory.cpp
   ${XERCESC}/util/regx/XMLUniCharacter.cpp
-  ${XERCESC}/util/FileManagers/WindowsFileMgr.cpp
-  ${XERCESC}/util/MutexManagers/WindowsMutexMgr.cpp
   ${XERCESC}/framework/LocalFileFormatTarget.cpp
   ${XERCESC}/framework/LocalFileInputSource.cpp
   ${XERCESC}/framework/MemBufFormatTarget.cpp
@@ -765,45 +719,99 @@ set(SRC_XERCESC
   ${XERCESC}/xinclude/XIncludeDOMDocumentProcessor.cpp
   ${XERCESC}/xinclude/XIncludeLocation.cpp
   ${XERCESC}/xinclude/XIncludeUtils.cpp
-  ${XERCESC}/util/MsgLoaders/Win32/Version.rc
 )
 
+if(ENABLE_MSGLOADER_INMEMORY)
+  set(SRC_MSGLOADER 
+    ${XERCESC}/util/MsgLoaders/InMemory/InMemMsgLoader.cpp    
+    ${XERCESC}/util/MsgLoaders/InMemory/InMemMsgLoader.hpp
+  )
+  add_definitions(-DXERCES_USE_MSGLOADER_INMEMORY)
+endif()
+
+if(ENABLE_MSGLOADER_WIN32)
+  set(SRC_MSGLOADER 
+    ${XERCESC}/util/MsgLoaders/Win32/Win32MsgLoader.cpp
+    ${XERCESC}/util/MsgLoaders/Win32/Win32MsgLoader.hpp
+    ${XERCESC}/util/MsgLoaders/Win32/Version.rc
+  )
+  add_definitions(-DXERCES_USE_WIN32_MSGLOADER)
+endif()
+
+if(ENABLE_TRANSCODER_WINDOWS)
+  set(SRC_TRANSCODER 
+    ${XERCESC}/util/Transcoders/Win32/Win32TransService.hpp
+    ${XERCESC}/util/Transcoders/Win32/Win32TransService.cpp
+  )
+  add_definitions(-DXERCES_USE_TRANSCODER_WINDOWS)
+endif()
+
+if(ENABLE_NETWORK AND ENABLE_NETACCESSOR_WINSOCK)
+  set(SRC_NETACCESSOR 
+    ${XERCESC}/util/NetAccessors/WinSock/BinHTTPURLInputStream.hpp
+    ${XERCESC}/util/NetAccessors/WinSock/WinSockNetAccessor.hpp
+    ${XERCESC}/util/NetAccessors/WinSock/BinHTTPURLInputStream.cpp
+    ${XERCESC}/util/NetAccessors/WinSock/WinSockNetAccessor.cpp
+  )
+  add_definitions(-DXERCES_USE_NETACCESSOR_WINSOCK)
+endif()
+
+if(WIN32)
+  add_definitions(-DXERCES_USE_FILEMGR_WINDOWS)
+  add_definitions(-DXERCES_USE_MUTEXMGR_WINDOWS)
+  set(SRC_UTILS_WIN32 
+    ${XERCESC}/util/FileManagers/WindowsFileMgr.hpp
+    ${XERCESC}/util/FileManagers/WindowsFileMgr.cpp
+    ${XERCESC}/util/MutexManagers/WindowsMutexMgr.cpp
+    ${XERCESC}/util/MutexManagers/WindowsMutexMgr.hpp
+  )
+
+endif()
 include_directories(${PROJECT_ROOT}/src)
 #====================================================
 # common flags
 #====================================================
 
-if(PLATFORM STREQUAL "Win32")
-  set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -DWIN32")
-else()
-  set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -DWIN64")
-endif()
-
-set(FLAGS_RELEASE "-DNDEBUG")
-set(FLAGS_DEBUG "-D_DEBUG")
-
-if(MSVC)
-
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc /Zi /wd4996")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_CRT_SECURE_NO_DEPRECATE -D_WINDOWS -DXERCES_BUILDING_LIBRARY -DXERCES_USE_TRANSCODER_WINDOWS -DXERCES_USE_MSGLOADER_INMEMORY -DXERCES_USE_NETACCESSOR_WINSOCK -DXERCES_USE_FILEMGR_WINDOWS -DXERCES_USE_MUTEXMGR_WINDOWS -DXERCES_PATH_DELIMITER_BACKSLASH -DHAVE_STRICMP -DHAVE_STRNICMP -DHAVE_LIMITS_H -DHAVE_SYS_TIMEB_H -DHAVE_FTIME -DHAVE_WCSUPR -DHAVE_WCSLWR -DHAVE_WCSICMP -DHAVE_WCSNICMP")
-  set(FLAGS_RELEASE "${FLAGS_RELEASE} /O1 /Ob2 /Oy- /GL /GF /GS- /Gy /MT")
-  set(FLAGS_DEBUG "${FLAGS_DEBUG} /Od /MTd /GS /RTC1")
-  if(LINK_TYPE STREQUAL "STATIC")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DXERCES_STATIC_LIBRARY")
-  endif()
-endif()
-
-if(CMAKE_COMPILER_IS_GNUCXX)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_CRT_SECURE_NO_DEPRECATE -D_WINDOWS -DXERCES_BUILDING_LIBRARY -DXERCES_USE_TRANSCODER_WINDOWS -DXERCES_USE_MSGLOADER_INMEMORY -DXERCES_USE_NETACCESSOR_WINSOCK -DXERCES_USE_FILEMGR_WINDOWS -DXERCES_USE_MUTEXMGR_WINDOWS -DXERCES_PATH_DELIMITER_BACKSLASH -DHAVE_STRICMP -DHAVE_STRNICMP -DHAVE_LIMITS_H -DHAVE_SYS_TIMEB_H -DHAVE_FTIME -DHAVE_WCSUPR -DHAVE_WCSLWR -DHAVE_WCSICMP -DHAVE_WCSNICMP")
-  set(FLAGS_RELEASE "${FLAGS_RELEASE} -s -O1")
-  set(FLAGS_DEBUG "${FLAGS_DEBUG}")
-  if(LINK_TYPE STREQUAL "STATIC")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DXERCES_STATIC_LIBRARY")
+if(WIN32)
+  add_definitions(-D_WINDOWS)
+  add_definitions(-DWIN32)
+  if(LIBRARY_BITS STREQUAL "62")
+    add_definitions(-DWIN64)
   endif()
 
-endif()
+  if(MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc /Zi /wd4996 -D_CRT_SECURE_NO_DEPRECATE")
+    set(FLAGS_RELEASE "${FLAGS_RELEASE} /O1 /Ob2 /Oy- /GL /GF /GS- /Gy /MT")
+    set(FLAGS_DEBUG "${FLAGS_DEBUG} /Od /MTd /GS /RTC1")
+  endif(MSVC)
 
+  if(CMAKE_COMPILER_IS_GNUCXX)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
+    set(FLAGS_RELEASE "${FLAGS_RELEASE} -s -O1")
+    set(FLAGS_DEBUG "${FLAGS_DEBUG}")
+  endif(CMAKE_COMPILER_IS_GNUCXX)
+
+  add_definitions(-DXERCES_BUILDING_LIBRARY)
+  add_definitions(-DXERCES_PATH_DELIMITER_BACKSLASH)
+  add_definitions(-DHAVE_STRICMP)
+  add_definitions(-DHAVE_STRNICMP)
+  add_definitions(-DHAVE_LIMITS_H)
+  add_definitions(-DHAVE_SYS_TIMEB_H)
+  add_definitions(-DHAVE_FTIME)
+  add_definitions(-DHAVE_WCSUPR)
+  add_definitions(-DHAVE_WCSLWR)
+  add_definitions(-DHAVE_WCSICMP)
+  add_definitions(-DHAVE_WCSNICMP)
+  add_definitions(-DXERCES_BUILDING_LIBRARY)
+
+endif(WIN32)
+
+set(FLAGS_RELEASE "${FLAGS_RELEASE} -DNDEBUG")
+set(FLAGS_DEBUG "${FLAGS_DEBUG} -D_DEBUG")
+
+if(LINK_TYPE STREQUAL "STATIC")
+  add_definitions(-DXERCES_STATIC_LIBRARY)
+endif()
 
 set(CMAKE_CXX_FLAGS_RELEASE "${FLAGS_RELEASE}")
 set(CMAKE_C_FLAGS_RELEASE "${FLAGS_RELEASE}")
@@ -813,6 +821,5 @@ set(CMAKE_C_FLAGS_DEBUG "${FLAGS_DEBUG}")
 #====================================================
 # build
 #====================================================
-
-set(SRC_FILES ${SRC_XERCESC})
+set(SRC_FILES ${COMMON_SRC_XERCESC} ${SRC_NETACCESSOR} ${SRC_MSGLOADER} ${SRC_TRANSCODER} ${SRC_UTILS_WIN32})
 add_library(xerces-c_3_1 ${LINK_TYPE} ${SRC_FILES})
