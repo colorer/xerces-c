@@ -775,7 +775,7 @@ include_directories(${PROJECT_ROOT}/src)
 if(WIN32)
   add_definitions(-D_WINDOWS)
   add_definitions(-DWIN32)
-  if(LIBRARY_BITS STREQUAL "62")
+  if(LIBRARY_BITS STREQUAL "64")
     add_definitions(-DWIN64)
   endif()
 
