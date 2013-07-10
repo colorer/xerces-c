@@ -126,7 +126,7 @@ set(COMMON_SRC_XERCESC
   ${XERCESC}/util/regx/XMLRangeFactory.hpp
   ${XERCESC}/util/regx/XMLUniCharacter.hpp
   ${XERCESC}/framework/LocalFileFormatTarget.hpp
-  ${XERCESC}/framework/LocalFileInputSource.Hpp
+  ${XERCESC}/framework/LocalFileInputSource.hpp
   ${XERCESC}/framework/MemBufFormatTarget.hpp
   ${XERCESC}/framework/MemBufInputSource.hpp
   ${XERCESC}/framework/MemoryManager.hpp
