@@ -721,7 +721,7 @@ set(COMMON_SRC_XERCESC
   ${XERCESC}/xinclude/XIncludeUtils.cpp
 )
 
-if(ENABLE_MSGLOADER_INMEMORY)
+if(XERCES_USE_MSGLOADER_INMEMORY)
   set(SRC_MSGLOADER 
     ${XERCESC}/util/MsgLoaders/InMemory/InMemMsgLoader.cpp    
     ${XERCESC}/util/MsgLoaders/InMemory/InMemMsgLoader.hpp
@@ -729,7 +729,7 @@ if(ENABLE_MSGLOADER_INMEMORY)
   add_definitions(-DXERCES_USE_MSGLOADER_INMEMORY)
 endif()
 
-if(ENABLE_MSGLOADER_WIN32)
+if(XERCES_USE_MSGLOADER_WIN32)
   set(SRC_MSGLOADER 
     ${XERCESC}/util/MsgLoaders/Win32/Win32MsgLoader.cpp
     ${XERCESC}/util/MsgLoaders/Win32/Win32MsgLoader.hpp
@@ -738,7 +738,7 @@ if(ENABLE_MSGLOADER_WIN32)
   add_definitions(-DXERCES_USE_WIN32_MSGLOADER)
 endif()
 
-if(ENABLE_TRANSCODER_WINDOWS)
+if(XERCES_USE_TRANSCODER_WINDOWS)
   set(SRC_TRANSCODER 
     ${XERCESC}/util/Transcoders/Win32/Win32TransService.hpp
     ${XERCESC}/util/Transcoders/Win32/Win32TransService.cpp
@@ -746,8 +746,8 @@ if(ENABLE_TRANSCODER_WINDOWS)
   add_definitions(-DXERCES_USE_TRANSCODER_WINDOWS)
 endif()
 
-if(ENABLE_NETWORK AND ENABLE_NETACCESSOR_WINSOCK)
-  set(SRC_NETACCESSOR 
+if(XERCES_USE_NETACCESSOR_WINSOCK)
+  set(SRC_NETWORK 
     ${XERCESC}/util/NetAccessors/WinSock/BinHTTPURLInputStream.hpp
     ${XERCESC}/util/NetAccessors/WinSock/WinSockNetAccessor.hpp
     ${XERCESC}/util/NetAccessors/WinSock/BinHTTPURLInputStream.cpp
@@ -756,21 +756,28 @@ if(ENABLE_NETWORK AND ENABLE_NETACCESSOR_WINSOCK)
   add_definitions(-DXERCES_USE_NETACCESSOR_WINSOCK)
 endif()
 
-if(WIN32)
+if(XERCES_USE_FILEMGR_WINDOWS)
   add_definitions(-DXERCES_USE_FILEMGR_WINDOWS)
-  add_definitions(-DXERCES_USE_MUTEXMGR_WINDOWS)
-  set(SRC_UTILS_WIN32 
+  set(SRC_FILEMNG 
     ${XERCESC}/util/FileManagers/WindowsFileMgr.hpp
     ${XERCESC}/util/FileManagers/WindowsFileMgr.cpp
+  )
+endif()
+
+if(XERCES_USE_MUTEXMGR_WINDOWS)
+  add_definitions(-DXERCES_USE_MUTEXMGR_WINDOWS)
+  set(SRC_MUTEXMNG 
     ${XERCESC}/util/MutexManagers/WindowsMutexMgr.cpp
     ${XERCESC}/util/MutexManagers/WindowsMutexMgr.hpp
   )
-
 endif()
+
 include_directories(${PROJECT_ROOT}/src)
 #====================================================
 # common flags
 #====================================================
+
+add_definitions(-DXERCES_BUILDING_LIBRARY)
 
 if(WIN32)
   add_definitions(-D_WINDOWS)
@@ -778,20 +785,13 @@ if(WIN32)
   if(LIBRARY_BITS STREQUAL "64")
     add_definitions(-DWIN64)
   endif()
+endif(WIN32)
 
-  if(MSVC)
+if(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc /Zi /wd4996 -D_CRT_SECURE_NO_DEPRECATE")
     set(FLAGS_RELEASE "${FLAGS_RELEASE} /O1 /Ob2 /Oy- /GL /GF /GS- /Gy /MT")
     set(FLAGS_DEBUG "${FLAGS_DEBUG} /Od /MTd /GS /RTC1")
-  endif(MSVC)
 
-  if(CMAKE_COMPILER_IS_GNUCXX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
-    set(FLAGS_RELEASE "${FLAGS_RELEASE} -s -O1")
-    set(FLAGS_DEBUG "${FLAGS_DEBUG}")
-  endif(CMAKE_COMPILER_IS_GNUCXX)
-
-  add_definitions(-DXERCES_BUILDING_LIBRARY)
   add_definitions(-DXERCES_PATH_DELIMITER_BACKSLASH)
   add_definitions(-DHAVE_STRICMP)
   add_definitions(-DHAVE_STRNICMP)
@@ -802,9 +802,17 @@ if(WIN32)
   add_definitions(-DHAVE_WCSLWR)
   add_definitions(-DHAVE_WCSICMP)
   add_definitions(-DHAVE_WCSNICMP)
-  add_definitions(-DXERCES_BUILDING_LIBRARY)
+endif(MSVC)
 
-endif(WIN32)
+if(CMAKE_COMPILER_IS_GNUCXX)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
+  set(FLAGS_RELEASE "${FLAGS_RELEASE} -s -O1")
+  set(FLAGS_DEBUG "${FLAGS_DEBUG}")
+
+  if(XERCES_HAVE_SSE2_INTRINSIC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse2")
+  endif()
+endif(CMAKE_COMPILER_IS_GNUCXX)
 
 set(FLAGS_RELEASE "${FLAGS_RELEASE} -DNDEBUG")
 set(FLAGS_DEBUG "${FLAGS_DEBUG} -D_DEBUG")
@@ -821,5 +829,5 @@ set(CMAKE_C_FLAGS_DEBUG "${FLAGS_DEBUG}")
 #====================================================
 # build
 #====================================================
-set(SRC_FILES ${COMMON_SRC_XERCESC} ${SRC_NETACCESSOR} ${SRC_MSGLOADER} ${SRC_TRANSCODER} ${SRC_UTILS_WIN32})
+set(SRC_FILES ${COMMON_SRC_XERCESC} ${SRC_NETWORK} ${SRC_MSGLOADER} ${SRC_TRANSCODER} ${SRC_FILEMNG} ${SRC_MUTEXMNG})
 add_library(xerces-c_3_1 ${LINK_TYPE} ${SRC_FILES})

@@ -1,0 +1,10 @@
+
+if(APP_NO_THREADS)
+  set(XERCES_USE_MUTEXMGR_NOTHREAD 1)
+else()
+  if(WIN32 OR MINGW OR MSYS)
+    set(XERCES_USE_MUTEXMGR_WINDOWS 1)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mthreads")
+  endif()
+
+endif()
