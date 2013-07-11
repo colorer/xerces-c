@@ -746,6 +746,14 @@ if(XERCES_USE_TRANSCODER_WINDOWS)
   add_definitions(-DXERCES_USE_TRANSCODER_WINDOWS)
 endif()
 
+if(XERCES_USE_TRANSCODER_GNUICONV)
+  set(SRC_TRANSCODER 
+    ${XERCESC}/util/Transcoders/IconvGNU/IconvGNUTransService.hpp
+    ${XERCESC}/util/Transcoders/IconvGNU/IconvGNUTransService.cpp
+  )
+  add_definitions(-DXERCES_USE_TRANSCODER_GNUICONV)
+endif()
+
 if(XERCES_USE_NETACCESSOR_WINSOCK)
   set(SRC_NETWORK 
     ${XERCESC}/util/NetAccessors/WinSock/BinHTTPURLInputStream.hpp
@@ -756,6 +764,16 @@ if(XERCES_USE_NETACCESSOR_WINSOCK)
   add_definitions(-DXERCES_USE_NETACCESSOR_WINSOCK)
 endif()
 
+if(XERCES_USE_NETACCESSOR_SOCKET)
+  set(SRC_NETWORK 
+    ${XERCESC}/util/NetAccessors/Socket/SocketNetAccessor.cpp
+    ${XERCESC}/util/NetAccessors/Socket/SocketNetAccessor.hpp
+    ${XERCESC}/util/NetAccessors/Socket/UnixHTTPURLInputStream.cpp
+    ${XERCESC}/util/NetAccessors/Socket/UnixHTTPURLInputStream.hpp
+  )
+  add_definitions(-DXERCES_USE_NETACCESSOR_SOCKET)
+endif()
+
 if(XERCES_USE_FILEMGR_WINDOWS)
   add_definitions(-DXERCES_USE_FILEMGR_WINDOWS)
   set(SRC_FILEMNG 
@@ -764,11 +782,35 @@ if(XERCES_USE_FILEMGR_WINDOWS)
   )
 endif()
 
+if(XERCES_USE_FILEMGR_POSIX)
+  add_definitions(-DXERCES_USE_FILEMGR_POSIX)
+  set(SRC_FILEMNG 
+    ${XERCESC}/util/FileManagers/PosixFileMgr.hpp
+    ${XERCESC}/util/FileManagers/PosixFileMgr.cpp
+  )
+endif()
+
 if(XERCES_USE_MUTEXMGR_WINDOWS)
   add_definitions(-DXERCES_USE_MUTEXMGR_WINDOWS)
   set(SRC_MUTEXMNG 
     ${XERCESC}/util/MutexManagers/WindowsMutexMgr.cpp
     ${XERCESC}/util/MutexManagers/WindowsMutexMgr.hpp
+  )
+endif()
+
+if(XERCES_USE_MUTEXMGR_POSIX)
+  add_definitions(-DXERCES_USE_MUTEXMGR_POSIX)
+  set(SRC_MUTEXMNG 
+    ${XERCESC}/util/MutexManagers/PosixMutexMgr.cpp
+    ${XERCESC}/util/MutexManagers/PosixMutexMgr.hpp
+  )
+endif()
+
+if(XERCES_USE_MUTEXMGR_NOTHREAD)
+  add_definitions(-DXERCES_USE_MUTEXMGR_NOTHREAD)
+  set(SRC_MUTEXMNG 
+    ${XERCESC}/util/MutexManagers/NoThreadMutexMgr.cpp
+    ${XERCESC}/util/MutexManagers/NoThreadMutexMgr.hpp
   )
 endif()
 

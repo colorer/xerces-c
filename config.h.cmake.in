@@ -14,13 +14,13 @@
 #cmakedefine HAVE_BOOL 1
 
 /* Define to 1 if you have the `catclose' function. */
-#undef HAVE_CATCLOSE
+#cmakedefine HAVE_CATCLOSE 1
 
 /* Define to 1 if you have the `catgets' function. */
-#undef HAVE_CATGETS
+#cmakedefine HAVE_CATGETS 1
 
 /* Define to 1 if you have the `catopen' function. */
-#undef HAVE_CATOPEN
+#cmakedefine HAVE_CATOPEN 1
 
 /* Define to 1 if you have the `clock_gettime' function. */
 #cmakedefine HAVE_CLOCK_GETTIME 1
@@ -149,7 +149,7 @@
 #undef HAVE_PATH_MAX
 
 /* Define if you have POSIX threads libraries and header files. */
-#undef HAVE_PTHREAD
+#cmakedefine HAVE_PTHREAD 1
 
 /* Define to 1 if you have the `realpath' function. */
 #cmakedefine HAVE_REALPATH 1
