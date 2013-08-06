@@ -58,6 +58,6 @@ else(MSVC)
   # write config
   CONFIGURE_FILE(${PROJECT_ROOT}/src/xercesc/util/Xerces_autoconf_config.hpp.cmake.in ${PROJECT_ROOT}/src/xercesc/util/Xerces_autoconf_config.hpp)
   CONFIGURE_FILE(${PROJECT_ROOT}/config.h.cmake.in ${PROJECT_ROOT}/config.h)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHAVE_CONFIG_H")
+  set(FLAGS_CXX_DEFAULT "${FLAGS_CXX_DEFAULT} -DHAVE_CONFIG_H")
   include_directories(${PROJECT_ROOT})
 endif(MSVC)
