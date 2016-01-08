@@ -26,13 +26,13 @@ IF(NOT ENABLE_STATIC AND NOT ENABLE_SHARED)
 ENDIF()
 
 # Set a reasonable default for the build type
-IF(NOT CMAKE_BUILD_TYPE)
-    SET(CMAKE_BUILD_TYPE Release CACHE STRING "Build type, one of: Release, Debug, RelWithDebInfo, or MinSizeRel" FORCE)
-ENDIF()
-IF(NOT LIBRARY_BITS)
-	SET(LIBRARY_BITS 32 CACHE STRING "How many bits to use for building: 32, 64")
-ENDIF()
-MESSAGE(STATUS "Build type -- ${CMAKE_BUILD_TYPE} ${LIBRARY_BITS} bits")
+set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "" FORCE)
+message("Xerces configurations for IDE: ${CMAKE_CONFIGURATION_TYPES}")
+
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type, one of: Release, Debug" FORCE)
+endif()
+message("Xerces build type: ${CMAKE_BUILD_TYPE}")
 
 # get source root
 GET_FILENAME_COMPONENT(PROJECT_ROOT "${CMAKE_CURRENT_SOURCE_DIR}" ABSOLUTE)
