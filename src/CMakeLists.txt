@@ -847,6 +847,11 @@ if(MSVC)
   add_definitions(-DHAVE_WCSLWR)
   add_definitions(-DHAVE_WCSICMP)
   add_definitions(-DHAVE_WCSNICMP)
+
+  # support winXP on vc2015
+  if(${CMAKE_CL_64} STREQUAL "0")
+    set(FLAGS_CXX_DEFAULT "${FLAGS_CXX_DEFAULT} /arch:IA32")
+  endif()
 endif(MSVC)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
