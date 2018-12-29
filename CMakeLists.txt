@@ -140,6 +140,7 @@ include(XercesPathMax)
 include(XercesWChar)
 include(XercesIconvConst)
 include(XercesLFS)
+include(XercesXPSupport)
 
 # Generate headers
 configure_file(
