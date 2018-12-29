@@ -42,7 +42,6 @@ void* MemoryManagerImpl::allocate(XMLSize_t size)
     catch(...) {
         throw OutOfMemoryException();
     }
-    
     if(memptr==NULL && size!=0)
         throw OutOfMemoryException();
     return memptr;

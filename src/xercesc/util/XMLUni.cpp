@@ -316,6 +316,11 @@ const XMLCh XMLUni::fgStandaloneString[] =
     chLatin_s, chLatin_t, chLatin_a, chLatin_n, chLatin_d, chLatin_a, chLatin_l, chLatin_o, chLatin_n, chLatin_e, chNull
 };
 
+const XMLCh XMLUni::fgVersion1[] =
+{
+    chDigit_1, chPeriod, chNull
+};
+
 const XMLCh XMLUni::fgVersion1_0[] =
 {
     chDigit_1, chPeriod, chDigit_0, chNull
@@ -1044,7 +1049,8 @@ const XMLCh XMLUni::fgXercesLoadSchema[] =
     ,   chLatin_v, chLatin_a, chLatin_l, chLatin_i, chLatin_d
     ,   chLatin_a, chLatin_t, chLatin_i, chLatin_n, chLatin_g, chForwardSlash
     ,   chLatin_l, chLatin_o, chLatin_a, chLatin_d, chDash
-    ,   chLatin_s, chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_a, chNull
+    ,   chLatin_s, chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_a
+    ,   chNull
 };
 
 //Xerces: http://apache.org/xml/features/validation/identity-constraint-checking
@@ -1460,7 +1466,7 @@ const XMLCh XMLUni::fgDOMDisallowDoctype[] =
 {
         chLatin_d, chLatin_i, chLatin_s, chLatin_a, chLatin_l, chLatin_l, chLatin_o
     ,   chLatin_w, chDash, chLatin_d, chLatin_o, chLatin_c, chLatin_t, chLatin_y
-    ,   chLatin_e, chNull
+    ,   chLatin_p, chLatin_e, chNull
 };
 
 const XMLCh XMLUni::fgDOMElementContentWhitespace[] =

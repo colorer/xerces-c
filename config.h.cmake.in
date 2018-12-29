@@ -1,5 +1,19 @@
-/* config.h.cmake.in. Copy from config.h.in */
-/* config.h.in.  Generated from configure.ac by autoheader.  */
+/* config.h.cmake.in.  Not generated, but originated from autoheader.  */
+/* This file must be kept up-to-date with needed substitutions from config.h.in. */
+
+/* Define to 1 if you have the <cstdint> header file. */
+#cmakedefine HAVE_CSTDINT 1
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#cmakedefine HAVE_STDINT_H 1
+
+#if defined(__cplusplus) && defined(HAVE_CSTDINT)
+#include <cstdint>
+#elif HAVE_STDINT_H
+#include <stdint.h>
+#elif HAVE_INTTYPES_H
+#include <inttypes.h>
+#endif
 
 /* Define to specify no threading is used */
 #cmakedefine APP_NO_THREADS 1
@@ -66,6 +80,9 @@
 
 /* Define to 1 if you have the `gettimeofday' function. */
 #cmakedefine HAVE_GETTIMEOFDAY 1
+
+/* Define to 1 if you have the `gmtime_r' function. */
+#cmakedefine HAVE_GMTIME_R 1
 
 /* Define to 1 if you have the `iconv' function. */
 #cmakedefine HAVE_ICONV 1
@@ -146,7 +163,7 @@
 #cmakedefine HAVE_PATHCONF 1
 
 /* Define to 1 if you have the PATH_MAX macro. */
-#undef HAVE_PATH_MAX
+#cmakedefine HAVE_PATH_MAX 1
 
 /* Define if you have POSIX threads libraries and header files. */
 #cmakedefine HAVE_PTHREAD 1
@@ -157,17 +174,17 @@
 /* Define to 1 if you have the `setlocale' function. */
 #cmakedefine HAVE_SETLOCALE 1
 
+/* Define to 1 if you have the `snprintf' function. */
+#cmakedefine HAVE_SNPRINTF 1
+
 /* Define to 1 if you have the `socket' function. */
 #cmakedefine HAVE_SOCKET 1
 
 /* Define to 1 if stdbool.h conforms to C99. */
-#undef HAVE_STDBOOL_H
+#cmakedefine HAVE_STDBOOL_H 1
 
 /* Define to 1 if you have the <stddef.h> header file. */
 #cmakedefine HAVE_STDDEF_H 1
-
-/* Define to 1 if you have the <stdint.h> header file. */
-#cmakedefine HAVE_STDINT_H 1
 
 /* Define to 1 if you have the <stdio.h> header file. */
 #cmakedefine HAVE_STDIO_H 1
@@ -235,6 +252,9 @@
 /* Define to 1 if you have the <sys/types.h> header file. */
 #cmakedefine HAVE_SYS_TYPES_H 1
 
+/* Define to 1 if you have the `timegm' function. */
+#cmakedefine HAVE_TIMEGM 1
+
 /* Define to 1 if you have the `towlower' function. */
 #cmakedefine HAVE_TOWLOWER 1
 
@@ -273,69 +293,55 @@
 
 /* Define to 1 if you have to use const char* with iconv, to 0 if you must use
    char*. */
-#undef ICONV_USES_CONST_POINTER
-
-/* Define to the sub-directory in which libtool stores uninstalled libraries.
-   */
-#undef LT_OBJDIR
+#define ICONV_USES_CONST_POINTER @ICONV_USES_CONST_POINTER@
 
 /* Define to 1 if your C compiler doesn't accept -c and -o together. */
-#undef NO_MINUS_C_MINUS_O
+#cmakedefine NO_MINUS_C_MINUS_O 1
 
 /* Name of package */
-#undef PACKAGE
+#define PACKAGE "@PACKAGE@"
 
 /* Define to the address where bug reports for this package should be sent. */
-#undef PACKAGE_BUGREPORT
+#define PACKAGE_BUGREPORT "@PACKAGE_BUGREPORT@"
 
 /* Define to the full name of this package. */
-#undef PACKAGE_NAME
+#define PACKAGE_NAME "@PACKAGE_NAME@"
 
 /* Define to the full name and version of this package. */
-#undef PACKAGE_STRING
+#define PACKAGE_STRING "@PACKAGE_STRING@"
 
 /* Define to the one symbol short name of this package. */
-#undef PACKAGE_TARNAME
+#define PACKAGE_TARNAME "@PACKAGE_TARNAME@"
 
 /* Define to the home page for this package. */
-#undef PACKAGE_URL
+#define PACKAGE_URL "@PACKAGE_URL@"
 
 /* Define to the version of this package. */
-#undef PACKAGE_VERSION
-
-/* Define to necessary symbol if this constant uses a non-standard name on
-   your system. */
-#undef PTHREAD_CREATE_JOINABLE
+#define PACKAGE_VERSION "@PACKAGE_VERSION@"
 
 /* The size of `int', as computed by sizeof. */
-#cmakedefine SIZEOF_INT @SIZEOF_INT@
+#define SIZEOF_INT @SIZEOF_INT@
 
 /* The size of `long', as computed by sizeof. */
-#cmakedefine SIZEOF_LONG @SIZEOF_LONG@
+#define SIZEOF_LONG @SIZEOF_LONG@
 
 /* The size of `long long', as computed by sizeof. */
-#cmakedefine SIZEOF_LONG_LONG @SIZEOF_LONG_LONG@
+#define SIZEOF_LONG_LONG @SIZEOF_LONG_LONG@
 
 /* The size of `short', as computed by sizeof. */
-#cmakedefine SIZEOF_SHORT @SIZEOF_SHORT@
+#define SIZEOF_SHORT @SIZEOF_SHORT@
 
 /* The size of `wchar_t', as computed by sizeof. */
-#cmakedefine SIZEOF_WCHAR_T @SIZEOF_WCHAR_T@
+#define SIZEOF_WCHAR_T @SIZEOF_WCHAR_T@
 
 /* The size of `__int64', as computed by sizeof. */
-#cmakedefine SIZEOF___INT64 @SIZEOF___INT64@
-
-/* Define to 1 if you have the ANSI C header files. */
-#cmakedefine STDC_HEADERS 1
-
-/* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
-#cmakedefine TIME_WITH_SYS_TIME 1
+#define SIZEOF___INT64 @SIZEOF___INT64@
 
 /* Version number of package */
-#undef VERSION
+#define VERSION "@PACKAGE_VERSION@"
 
-/* Define to true if autoconf is used in this configuration */
-#cmakedefine XERCES_AUTOCONF 1
+/* Define if DLL symbols should be exported */
+#cmakedefine XERCES_DLL_EXPORT 1
 
 /* Define if namespaces is supported by the compiler */
 #cmakedefine XERCES_HAS_CPP_NAMESPACE 1
@@ -383,37 +389,46 @@
 #cmakedefine XERCES_PATH_DELIMITER_BACKSLASH 1
 
 /* Define as the platform's export attribute */
-#cmakedefine XERCES_PLATFORM_EXPORT @XERCES_PLATFORM_EXPORT@
+#define XERCES_PLATFORM_EXPORT @XERCES_PLATFORM_EXPORT@
 
 /* Define as the platform's import attribute */
-#cmakedefine XERCES_PLATFORM_IMPORT @XERCES_PLATFORM_IMPORT@
+#define XERCES_PLATFORM_IMPORT @XERCES_PLATFORM_IMPORT@
 
 /* An appropriate signed 16 bit integer type */
-#cmakedefine XERCES_S16BIT_INT @XERCES_S16BIT_INT@
+#define XERCES_S16BIT_INT @XERCES_S16BIT_INT@
 
 /* An appropriate signed 32 bit integer type */
-#cmakedefine XERCES_S32BIT_INT @XERCES_S32BIT_INT@
+#define XERCES_S32BIT_INT @XERCES_S32BIT_INT@
 
 /* An appropriate signed 64 bit integer type */
-#cmakedefine XERCES_S64BIT_INT @XERCES_S64BIT_INT@
+#define XERCES_S64BIT_INT @XERCES_S64BIT_INT@
+
+/* Define as the appropriate SIZE_MAX macro */
+#define XERCES_SIZE_MAX @XERCES_SIZE_MAX@
 
 /* Define as the appropriate size_t type */
-#cmakedefine XERCES_SIZE_T @XERCES_SIZE_T@
+#define XERCES_SIZE_T @XERCES_SIZE_T@
+
+/* Define as the appropriate SSIZE_MAX macro */
+#define XERCES_SSIZE_MAX @XERCES_SSIZE_MAX@
 
 /* Define as the appropriate ssize_t type */
-#cmakedefine XERCES_SSIZE_T @XERCES_SSIZE_T@
+#define XERCES_SSIZE_T @XERCES_SSIZE_T@
+
+/* Define if building a static library */
+#cmakedefine XERCES_STATIC_LIBRARY 1
 
 /* Define if the std namespace is supported */
 #cmakedefine XERCES_STD_NAMESPACE 1
 
 /* An appropriate unsigned 16 bit integer type */
-#cmakedefine XERCES_U16BIT_INT @XERCES_U16BIT_INT@
+#define XERCES_U16BIT_INT @XERCES_U16BIT_INT@
 
 /* An appropriate unsigned 32 bit integer type */
-#cmakedefine XERCES_U32BIT_INT @XERCES_U32BIT_INT@
+#define XERCES_U32BIT_INT @XERCES_U32BIT_INT@
 
 /* An appropriate unsigned 64 bit integer type */
-#cmakedefine XERCES_U64BIT_INT @XERCES_U64BIT_INT@
+#define XERCES_U64BIT_INT @XERCES_U64BIT_INT@
 
 /* Define to use the POSIX file mgr */
 #cmakedefine XERCES_USE_FILEMGR_POSIX 1
@@ -430,11 +445,11 @@
 /* Define to use the InMemory MsgLoader */
 #cmakedefine XERCES_USE_MSGLOADER_INMEMORY 1
 
-/* Define to use the Win32 MsgLoader */
-#cmakedefine XERCES_USE_MSGLOADER_WIN32 1
-
 /* Define to use the NoThread mutex mgr */
 #cmakedefine XERCES_USE_MUTEXMGR_NOTHREAD 1
+
+/* Define to use the C++11 standard mutex mgr */
+#cmakedefine XERCES_USE_MUTEXMGR_STD 1
 
 /* Define to use the POSIX mutex mgr */
 #cmakedefine XERCES_USE_MUTEXMGR_POSIX 1
@@ -470,23 +485,27 @@
 #cmakedefine XERCES_USE_TRANSCODER_WINDOWS 1
 
 /* Define to the 16 bit type used to represent Xerces UTF-16 characters */
-#cmakedefine XERCES_XMLCH_T @XERCES_XMLCH_T@
+#define XERCES_XMLCH_T @XERCES_XMLCH_T@
 
 /* Define to empty if `const' does not conform to ANSI C. */
-#undef const
+#if !@HAVE_CONST@
+#define const
+#endif
 
 /* Define to `__inline__' or `__inline' if that's what the C compiler
    calls it, or to nothing if 'inline' is not supported under any name.  */
 #ifndef __cplusplus
-#undef inline
+#if !@HAVE_INLINE@
+#if @NEED_INLINE@
+#define inline @inline_keyword@
+#else
+#define inline
+#endif
+#endif
 #endif
 
-/* Define to `long int' if <sys/types.h> does not define. */
-#cmakedefine off_t @off_t@
-
-/* Define to `unsigned int' if <sys/types.h> does not define. */
-#cmakedefine size_t @size_t@
-
 /* Define to empty if the keyword `volatile' does not work. Warning: valid
-   code using `volatile' can become incorrect without. Disable with care. */
-#undef volatile
+code using `volatile' can become incorrect without. Disable with care. */
+#if !@HAVE_VOLATILE@
+#define volatile
+#endif
