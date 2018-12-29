@@ -174,11 +174,24 @@ install(
   DESTINATION "${PKGCONFIGDIR}"
   COMPONENT "development")
 
+option(XERCESC_BUILD_DOC "Build docs" ON)
+option(XERCESC_BUILD_TESTS "Build test" ON)
+option(XERCESC_BUILD_SAMPLES "Build samples" ON)
+
 # Process subdirectories
-add_subdirectory(doc)
+if (XERCESC_BUILD_DOC)
+  add_subdirectory(doc)
+endif()
+
 add_subdirectory(src)
-add_subdirectory(tests)
-add_subdirectory(samples)
+
+if (XERCESC_BUILD_TESTS)
+  add_subdirectory(tests)
+endif()
+
+if (XERCESC_BUILD_SAMPLES)
+  add_subdirectory(samples)
+endif()
 
 # Display configuration summary
 message(STATUS "")
