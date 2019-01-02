@@ -19,6 +19,8 @@
 
 # compiler warnings
 
+option(show-warnings "Enable compiler warnings" ON)
+
 # These are annoyingly verbose, produce false positives or don't work
 # nicely with all supported compiler versions, so are disabled unless
 # explicitly enabled.
@@ -31,59 +33,61 @@ option(fatal-warnings "Compiler warnings are errors" OFF)
 # flags, and enable them if supported.  This greatly improves the
 # quality of the build by checking for a number of common problems,
 # some of which are quite serious.
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR
-   CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  set(test_flags
-      -Wall
-      -Wcast-align
-      -Wcast-qual
-      -Wctor-dtor-privacy
-      -Wextra
-      -Wformat=2
-      -Wimplicit-atomic-properties
-      -Wmissing-declarations
-      -Wno-long-long
-      -Woverlength-strings
-      -Woverloaded-virtual
-      -Wredundant-decls
-      -Wreorder
-      -Wswitch-default
-      -Wunused-variable
-      -Wwrite-strings
-      -Wno-variadic-macros
-      -fstrict-aliasing)
-  if(extra-warnings)
-    list(APPEND test_flags
-        -Wfloat-equal
-        -Wmissing-prototypes
-        -Wunreachable-code)
+if (show_warnings)
+  if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR
+     CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    set(test_flags
+        -Wall
+        -Wcast-align
+        -Wcast-qual
+        -Wctor-dtor-privacy
+        -Wextra
+        -Wformat=2
+        -Wimplicit-atomic-properties
+        -Wmissing-declarations
+        -Wno-long-long
+        -Woverlength-strings
+        -Woverloaded-virtual
+        -Wredundant-decls
+        -Wreorder
+        -Wswitch-default
+        -Wunused-variable
+        -Wwrite-strings
+        -Wno-variadic-macros
+        -fstrict-aliasing)
+    if(extra-warnings)
+      list(APPEND test_flags
+          -Wfloat-equal
+          -Wmissing-prototypes
+          -Wunreachable-code)
+    endif()
+    if(fatal-warnings)
+      list(APPEND test_flags
+           -Werror)
+    endif()
+  elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    set(test_flags)
+    if(extra-warnings)
+      list(APPEND test_flags
+           /W4)
+    else()
+      list(APPEND test_flags
+           /W3)
+    endif()
+    if (fatal-warnings)
+      list(APPEND test_flags
+           /WX)
+    endif()
   endif()
-  if(fatal-warnings)
-    list(APPEND test_flags
-         -Werror)
-  endif()
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-  set(test_flags)
-  if(extra-warnings)
-    list(APPEND test_flags
-         /W4)
-  else()
-    list(APPEND test_flags
-         /W3)
-  endif()
-  if (fatal-warnings)
-    list(APPEND test_flags
-         /WX)
-  endif()
-endif()
 
-include(CheckCXXCompilerFlag)
+  include(CheckCXXCompilerFlag)
 
-foreach(flag ${test_flags})
-  string(REGEX REPLACE "[^A-Za-z0-9]" "_" flag_var "${flag}")
-  set(test_c_flag "CXX_FLAG${flag_var}")
-  CHECK_CXX_COMPILER_FLAG(${flag} "${test_c_flag}")
-  if (${test_c_flag})
-     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flag}")
-  endif (${test_c_flag})
-endforeach(flag ${test_flags})
+  foreach(flag ${test_flags})
+    string(REGEX REPLACE "[^A-Za-z0-9]" "_" flag_var "${flag}")
+    set(test_c_flag "CXX_FLAG${flag_var}")
+    CHECK_CXX_COMPILER_FLAG(${flag} "${test_c_flag}")
+    if (${test_c_flag})
+       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flag}")
+    endif (${test_c_flag})
+  endforeach(flag ${test_flags})
+endif ()
